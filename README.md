@@ -42,3 +42,24 @@ Expected JSON responses:
 - `GET /api/gigs`
 - `POST /api/gigs`
 - `POST /api/gigs/:id/apply`
+
+
+## Ready-to-use Google Apps Script
+
+A complete Apps Script implementation is included at:
+
+- `docs/google-apps-script.js`
+
+### Quick steps
+
+1. Create a Google Sheet and open **Extensions → Apps Script**.
+2. Paste `docs/google-apps-script.js` contents.
+3. Deploy as **Web app** with access set to **Anyone with the link**.
+4. Set:
+
+```bash
+export GOOGLE_SHEETS_WEBHOOK_URL="<your-web-app-url>"
+npm start
+```
+
+The Node backend will then persist gigs to your Google Sheet.
