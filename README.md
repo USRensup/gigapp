@@ -63,3 +63,14 @@ npm start
 ```
 
 The Node backend will then persist gigs to your Google Sheet.
+
+
+## Backend quick check
+
+After `npm start`, verify backend is live:
+
+```bash
+curl http://localhost:8080/api/health
+```
+
+You should receive `{ "ok": true, ... }`.

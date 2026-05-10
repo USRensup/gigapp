@@ -95,6 +95,10 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'Bad request' });
     }
 
+    if (req.method === 'GET' && req.url === '/api/health') {
+      return sendJson(res, 200, { ok: true, backend: sheetsUrl ? 'google-sheets' : 'local-file' });
+    }
+
     if (req.method === 'GET' && req.url === '/api/gigs') {
       return sendJson(res, 200, await listGigs());
     }
