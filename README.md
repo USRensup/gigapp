@@ -1,12 +1,9 @@
 # GigBoard Clone
 
-This project now includes a lightweight backend so Post/Apply actions work.
+This project supports two backend persistence modes:
 
-## Stack
-
-- Frontend: static HTML/CSS/JS
-- Backend: Node.js HTTP server (no external runtime dependencies)
-- Storage: JSON file at `data/gigs.json`
+1. **Local JSON file** (`data/gigs.json`) for local development.
+2. **Google Sheets backend** via Apps Script webhook for a hosted, shared data store.
 
 ## Run locally
 
@@ -15,21 +12,33 @@ npm install
 npm start
 ```
 
-Open `http://localhost:8080`.
+## Use Google Sheets as backend
+
+Set environment variable before running:
+
+```bash
+export GOOGLE_SHEETS_WEBHOOK_URL="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
+npm start
+```
+
+When set, server routes `/api/gigs` and `/api/gigs/:id/apply` through the webhook instead of `data/gigs.json`.
+
+### Expected webhook contract
+
+The server sends JSON payloads:
+
+- `{ "action": "list" }`
+- `{ "action": "create", "payload": { ...gigFields } }`
+- `{ "action": "apply", "id": "g123" }`
+
+Expected JSON responses:
+
+- list: `{ "gigs": [...] }`
+- create: `{ "gig": { ... } }`
+- apply: `{ "success": true, "applications": 3 }`
 
 ## API
 
-- `GET /api/gigs` - list gigs
-- `POST /api/gigs` - create a gig
-- `POST /api/gigs/:id/apply` - increment application count
-
-## Notes
-
-- This backend is file-based and intended for prototype/dev usage.
-- For production, move to a real database and authenticated users.
-
-
-## Netlify/GitHub Pages note
-
-Those hosts are static by default, so `/api/*` will not run there unless you deploy a separate backend.
-The UI now falls back to browser localStorage for Post/Apply when API calls fail.
+- `GET /api/gigs`
+- `POST /api/gigs`
+- `POST /api/gigs/:id/apply`
