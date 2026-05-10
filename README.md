@@ -5,7 +5,7 @@ This project now includes a lightweight backend so Post/Apply actions work.
 ## Stack
 
 - Frontend: static HTML/CSS/JS
-- Backend: Node.js + Express
+- Backend: Node.js HTTP server (no external runtime dependencies)
 - Storage: JSON file at `data/gigs.json`
 
 ## Run locally
@@ -27,3 +27,9 @@ Open `http://localhost:8080`.
 
 - This backend is file-based and intended for prototype/dev usage.
 - For production, move to a real database and authenticated users.
+
+
+## Netlify/GitHub Pages note
+
+Those hosts are static by default, so `/api/*` will not run there unless you deploy a separate backend.
+The UI now falls back to browser localStorage for Post/Apply when API calls fail.

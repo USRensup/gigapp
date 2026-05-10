@@ -1,4 +1,5 @@
 let gigs = [];
+const LOCAL_KEY = 'gigboard_gigs';
 
 const gigList = document.getElementById('gigList');
 const searchInput = document.getElementById('searchInput');
@@ -10,9 +11,27 @@ const postGigForm = document.getElementById('postGigForm');
 const cancelPost = document.getElementById('cancelPost');
 const formMessage = document.getElementById('formMessage');
 
+function loadLocalGigs() {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalGigs(items) {
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
+}
+
 async function fetchGigs() {
-  const response = await fetch('/api/gigs');
-  gigs = await response.json();
+  try {
+    const response = await fetch('/api/gigs');
+    if (!response.ok) throw new Error('API unavailable');
+    gigs = await response.json();
+    saveLocalGigs(gigs);
+  } catch {
+    gigs = loadLocalGigs();
+  }
   applyFilters();
 }
 
@@ -29,9 +48,17 @@ function render(items) {
 
     const applyBtn = node.querySelector('.apply-btn');
     applyBtn.addEventListener('click', async () => {
-      const res = await fetch(`/api/gigs/${gig.id}/apply`, { method: 'POST' });
-      if (res.ok) {
+      try {
+        const res = await fetch(`/api/gigs/${gig.id}/apply`, { method: 'POST' });
+        if (!res.ok) throw new Error('API unavailable');
         await fetchGigs();
+      } catch {
+        const local = loadLocalGigs();
+        const found = local.find((g) => g.id === gig.id);
+        if (found) found.applications = (found.applications || 0) + 1;
+        saveLocalGigs(local);
+        gigs = local;
+        applyFilters();
       }
     });
 
@@ -58,6 +85,7 @@ openPostModal.addEventListener('click', () => {
     postGigDialog.setAttribute('open', 'open');
   }
 });
+
 cancelPost.addEventListener('click', () => {
   formMessage.textContent = '';
   if (typeof postGigDialog.close === 'function') {
@@ -73,28 +101,37 @@ postGigForm.addEventListener('submit', async (event) => {
   const payload = Object.fromEntries(form.entries());
 
   formMessage.textContent = 'Publishing...';
-  const response = await fetch('/api/gigs', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
 
-  if (response.ok) {
+  try {
+    const response = await fetch('/api/gigs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error('API unavailable');
+
     formMessage.textContent = 'Gig published successfully.';
     postGigForm.reset();
     await fetchGigs();
-    setTimeout(() => {
-      formMessage.textContent = '';
-      if (typeof postGigDialog.close === 'function') {
-        postGigDialog.close();
-      } else {
-        postGigDialog.removeAttribute('open');
-      }
-    }, 400);
-  } else {
-    const err = await response.json().catch(() => ({ error: 'Could not publish gig' }));
-    formMessage.textContent = err.error || 'Could not publish gig';
+  } catch {
+    const local = loadLocalGigs();
+    local.unshift({ id: `local-${Date.now()}`, ...payload, applications: 0 });
+    saveLocalGigs(local);
+    gigs = local;
+    applyFilters();
+    formMessage.textContent = 'Backend unavailable. Saved locally in this browser.';
+    postGigForm.reset();
   }
+
+  setTimeout(() => {
+    formMessage.textContent = '';
+    if (typeof postGigDialog.close === 'function') {
+      postGigDialog.close();
+    } else {
+      postGigDialog.removeAttribute('open');
+    }
+  }, 800);
 });
 
 searchInput.addEventListener('input', applyFilters);
