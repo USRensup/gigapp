@@ -41,3 +41,17 @@ This repo includes a GitHub Actions workflow at:
 4. Push to `main` branch.
 
 The workflow will deploy the static site automatically on each push to `main`.
+
+
+## 404 on GitHub Pages?
+
+If you see `404 File not found`, check these first:
+
+1. **Pages source is set to GitHub Actions** in `Settings → Pages`.
+2. You are pushing to a branch that triggers deployment (`main`, `master`, or `work`).
+3. The latest Actions run named **Deploy static site to GitHub Pages** succeeded.
+4. The site URL matches your repo type:
+   - User/org site: `https://<user>.github.io/`
+   - Project site: `https://<user>.github.io/<repo>/`
+
+This repo includes `index.html` at the root, which is required for Pages root routing.
