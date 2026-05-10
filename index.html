@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Communitie GigBoard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Communitie<span>.</span></div>
+    <nav class="topnav">
+      <button class="tab active">⌂ Home</button>
+      <input id="searchInput" class="search" placeholder="Search" />
+      <button id="openPostModal" class="tab">＋ Create Gig</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="logo-sub">Communitie <em>GigBoard</em></p>
+    <h1>Gigs for the <span>Creatively</span> Unconventional.</h1>
+    <div class="hero-actions">
+      <button class="dark-pill">Looking to hire</button>
+      <button class="dark-pill">Looking for a gig</button>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="left-panel">
+      <h2>Find Your Dream Gig</h2>
+      <p>Choose by department</p>
+      <p>Choose by location</p>
+      <div class="filters-list">
+        <button class="filter active" data-type="all">All Gigs</button>
+        <button class="filter" data-type="full-time">Full-time</button>
+        <button class="filter" data-type="part-time">Part-time</button>
+        <button class="filter" data-type="freelance">Freelance</button>
+      </div>
+    </aside>
+
+    <section class="center-panel">
+      <h2>Discover Exciting Opportunities</h2>
+      <div id="gigList" class="gig-grid"></div>
+    </section>
+
+    <aside class="right-panel" id="detailsPanel">
+      <div class="details-empty">Select a gig to view details</div>
+    </aside>
+  </main>
+
+  <dialog id="postGigDialog">
+    <form id="postGigForm" class="modal-form">
+      <h3>Create Gig</h3>
+      <div class="row"><label>Title *</label><input name="title" required /></div>
+      <div class="row"><label>Company *</label><input name="company" required /></div>
+      <div class="split">
+        <div class="row"><label>Gig Type *</label><select name="type" required><option>full-time</option><option>part-time</option><option>freelance</option></select></div>
+        <div class="row"><label>Location *</label><input name="location" required /></div>
+      </div>
+      <div class="split">
+        <div class="row"><label>Pay *</label><input name="pay" required /></div>
+        <div class="row"><label>Category</label><input name="category" placeholder="Marketing" /></div>
+      </div>
+      <div class="row"><label>Description *</label><textarea name="description" required></textarea></div>
+      <p id="formMessage" class="form-message" aria-live="polite"></p>
+      <div class="actions"><button type="button" id="cancelPost">Cancel</button><button type="submit" class="primary">Publish gig</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="applyDialog">
+    <form id="applyForm" class="modal-form">
+      <h3 id="applyTitle">Apply</h3>
+      <div class="row"><label>Name *</label><input name="name" required /></div>
+      <div class="row"><label>Email / Contact *</label><input name="contact" required /></div>
+      <div class="row"><label>Message</label><textarea name="message"></textarea></div>
+      <div class="row"><label>Upload CV</label><input name="cv" type="file" /></div>
+      <p id="applyMessage" class="form-message" aria-live="polite"></p>
+      <div class="actions"><button type="button" id="cancelApply">Close</button><button class="primary" type="submit">Send Application</button></div>
+    </form>
+  </dialog>
+
+  <template id="gigCardTemplate">
+    <article class="gig-card">
+      <span class="tag"></span>
+      <h3 class="title"></h3>
+      <p class="company"></p>
+      <p class="location"></p>
+      <div class="meta"><span class="pay"></span><span class="type-pill"></span></div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
