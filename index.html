@@ -35,7 +35,7 @@
   </main>
 
   <dialog id="postGigDialog">
-    <form id="postGigForm" method="dialog" class="post-form">
+    <form id="postGigForm" class="post-form">
       <h3>Post a new gig</h3>
       <input name="title" placeholder="Title" required />
       <input name="company" placeholder="Company" required />
@@ -46,6 +46,7 @@
       </select>
       <input name="pay" placeholder="Pay (ex: $35/hr)" required />
       <textarea name="description" placeholder="Description" required></textarea>
+      <p id="formMessage" class="form-message" aria-live="polite"></p>
       <div class="dialog-actions">
         <button type="button" id="cancelPost" class="btn secondary">Cancel</button>
         <button type="submit" class="btn">Publish gig</button>

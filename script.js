@@ -8,6 +8,7 @@ const openPostModal = document.getElementById('openPostModal');
 const postGigDialog = document.getElementById('postGigDialog');
 const postGigForm = document.getElementById('postGigForm');
 const cancelPost = document.getElementById('cancelPost');
+const formMessage = document.getElementById('formMessage');
 
 async function fetchGigs() {
   const response = await fetch('/api/gigs');
@@ -50,14 +51,28 @@ function applyFilters() {
   render(filtered);
 }
 
-openPostModal.addEventListener('click', () => postGigDialog.showModal());
-cancelPost.addEventListener('click', () => postGigDialog.close());
+openPostModal.addEventListener('click', () => {
+  if (typeof postGigDialog.showModal === 'function') {
+    postGigDialog.showModal();
+  } else {
+    postGigDialog.setAttribute('open', 'open');
+  }
+});
+cancelPost.addEventListener('click', () => {
+  formMessage.textContent = '';
+  if (typeof postGigDialog.close === 'function') {
+    postGigDialog.close();
+  } else {
+    postGigDialog.removeAttribute('open');
+  }
+});
 
 postGigForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const form = new FormData(postGigForm);
   const payload = Object.fromEntries(form.entries());
 
+  formMessage.textContent = 'Publishing...';
   const response = await fetch('/api/gigs', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -65,9 +80,20 @@ postGigForm.addEventListener('submit', async (event) => {
   });
 
   if (response.ok) {
+    formMessage.textContent = 'Gig published successfully.';
     postGigForm.reset();
-    postGigDialog.close();
     await fetchGigs();
+    setTimeout(() => {
+      formMessage.textContent = '';
+      if (typeof postGigDialog.close === 'function') {
+        postGigDialog.close();
+      } else {
+        postGigDialog.removeAttribute('open');
+      }
+    }, 400);
+  } else {
+    const err = await response.json().catch(() => ({ error: 'Could not publish gig' }));
+    formMessage.textContent = err.error || 'Could not publish gig';
   }
 });
 
