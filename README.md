@@ -55,3 +55,25 @@ If you see `404 File not found`, check these first:
    - Project site: `https://<user>.github.io/<repo>/`
 
 This repo includes `index.html` at the root, which is required for Pages root routing.
+
+
+## Netlify deployment (fixes common failures)
+
+If Netlify deployment fails for this repo, use these exact settings:
+
+- **Build command**: *(leave empty)*
+- **Publish directory**: `.`
+
+This repo now includes `netlify.toml` to force the publish directory and SPA fallback routing.
+
+### Typical failure causes
+
+1. Publish directory set incorrectly (for example `dist` or `build` when those folders do not exist).
+2. Build command provided even though this is static HTML/CSS/JS.
+3. Wrong site URL checked after deploy.
+
+### CLI verify locally
+
+```bash
+npx netlify-cli deploy --dir=. --prod
+```
