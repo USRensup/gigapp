@@ -1,0 +1,22 @@
+[
+  {
+    "id": "g1",
+    "title": "Frontend React Developer",
+    "company": "Nova Labs",
+    "location": "Remote",
+    "type": "remote",
+    "pay": "$40/hr",
+    "description": "Build UI components for a fast-moving startup.",
+    "applications": 0
+  },
+  {
+    "id": "g2",
+    "title": "Event Photographer",
+    "company": "City Moments",
+    "location": "Austin, TX",
+    "type": "onsite",
+    "pay": "$250/day",
+    "description": "Capture photos for weekend community events.",
+    "applications": 0
+  }
+]
