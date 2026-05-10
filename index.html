@@ -10,7 +10,7 @@
   <header class="topbar">
     <div class="container nav">
       <h1>GigBoard</h1>
-      <button class="btn">Post a Gig</button>
+      <button id="openPostModal" class="btn">Post a Gig</button>
     </div>
   </header>
 
@@ -34,6 +34,25 @@
     </section>
   </main>
 
+  <dialog id="postGigDialog">
+    <form id="postGigForm" method="dialog" class="post-form">
+      <h3>Post a new gig</h3>
+      <input name="title" placeholder="Title" required />
+      <input name="company" placeholder="Company" required />
+      <input name="location" placeholder="Location" required />
+      <select name="type" required>
+        <option value="remote">Remote</option>
+        <option value="onsite">On-site</option>
+      </select>
+      <input name="pay" placeholder="Pay (ex: $35/hr)" required />
+      <textarea name="description" placeholder="Description" required></textarea>
+      <div class="dialog-actions">
+        <button type="button" id="cancelPost" class="btn secondary">Cancel</button>
+        <button type="submit" class="btn">Publish gig</button>
+      </div>
+    </form>
+  </dialog>
+
   <template id="gigCardTemplate">
     <article class="card">
       <div class="card-top">
@@ -42,9 +61,10 @@
       </div>
       <p class="meta"></p>
       <p class="description"></p>
+      <p class="applications"></p>
       <div class="footer">
         <strong class="pay"></strong>
-        <button class="btn secondary">Apply</button>
+        <button class="btn secondary apply-btn">Apply</button>
       </div>
     </article>
   </template>
